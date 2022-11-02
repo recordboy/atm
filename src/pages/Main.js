@@ -1,13 +1,35 @@
 import React, { useEffect, useState } from 'react';
 import './Main.scss';
 import ListItem from './ListItem';
-import Not from './Not';
+import GuideView from './GuideView';
 
-function Main() {
+// 네비 리스트
+const navArr = [
+  ['전체', ''],
+  ['대형', 'E'],
+  ['중형', 'D'],
+  ['소형', 'C'],
+  ['SUV', 'SUV'],
+]
+
+const Main = () => {
 
   const [data, setData] = useState([]);
+  const [guideStr, setGuideStr] = useState('');
+  const [navVal, setNavVal] = useState('');
+
   useEffect(() => {
-    fetch(`https://preonboarding.platdev.net/api/cars`, {
+    // 전체 데이터 가져오기
+    getData();
+  }, []);
+
+  // 데이터 가져오기
+  const getData = (segment) => {
+    let segmentStr = '';
+    if (segment) {
+      segmentStr = 'segment=' + segment;
+    }
+    fetch(`https://preonboarding.platdev.net/api/cars?${segmentStr}`, {
       method: 'GET',
       header: { 'Content-Type': `application/json` },
     })
@@ -15,15 +37,26 @@ function Main() {
         return response.json();
       })
       .then(result => {
-
         if (result.payload) {
           setData(result.payload);
+
+          // 차량 없는경우
+          if (!result.payload.length) {
+            setGuideStr('차량이 없습니다.')
+          }
           console.log(result.payload);
         }
-
       });
+  }
 
-  }, []);
+  /**
+   * 네비 버튼 클릭
+   */
+  const clickNavBtn = (e) => {
+    getData(e.target.value);
+    setNavVal(e.target.value);
+    console.log(e);
+  }
 
   return (
     <>
@@ -32,13 +65,19 @@ function Main() {
       </header>
 
       <div className="main">
+
+        {/* ENUMC:소형, D:중형, E:대형, SUV:SUV */}
         <div className='select_nav'>
-          <ul className="inner">
-            <li className='on'>전체</li>
-            <li>대형</li>
-            <li>중형</li>
-            <li>소형</li>
-          </ul>
+          {navArr.map((item, idx) => {
+            return (
+            <button 
+              type="button" 
+              key={idx} 
+              onClick={clickNavBtn} 
+              className={navVal === item[1] ? 'on' : ''} 
+              value={item[1]}>{item[0]}
+            </button>)
+          })}
         </div>
 
         <div className='list_view'>
@@ -49,9 +88,10 @@ function Main() {
               <ListItem item={item} key={idx} />
             )
 
-          // 차량 리스트가 없는경우
-          }) : <Not />}
+            // 차량 리스트가 없는경우
+          }) : <GuideView guideStr={guideStr} />}
 
+          {/* <GuideView guideStr={guideStr} /> */}
         </div>
 
       </div>

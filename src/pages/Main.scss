@@ -1,7 +1,9 @@
-.main {
+
+body {
+    margin: 0;
+    padding: 0;
 }
 
-// 컴포넌트로 분리 예정
 .header {
     padding: 10px 20px;
     border-bottom: 2px solid #333;
@@ -14,27 +16,25 @@
 
 .select_nav {
     width: 100%;
-    .inner {
-        margin: 0;
-        padding: 10px 20px;
-        border-bottom: 2px solid #333;
-        list-style: none;
-        & > li {
-            display: inline-block;
-            margin-right: 5px;
-            width: 50px;
-            height: 30px;
-            text-align: center;
-            line-height: 30px;
-            border-radius: 15px;
-            font-size: 14px;
-            cursor: pointer;
-            background-color: #d9d9d9;
-            &.on {
-                background-color: #000;
-                color: #fff;
+    margin: 0;
+    padding: 10px 20px;
+    border-bottom: 2px solid #333;
+    button {
+        display: inline-block;
+        margin-right: 5px;
+        width: 50px;
+        height: 30px;
+        text-align: center;
+        line-height: 30px;
+        border-radius: 15px;
+        font-size: 14px;
+        border: none;
+        cursor: pointer;
+        background-color: #d9d9d9;
+        &.on {
+            background-color: #000;
+            color: #fff;
 
-            }
         }
     }
 }
